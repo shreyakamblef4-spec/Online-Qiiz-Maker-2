@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Online Quiz Maker</title>
+
+<link rel="stylesheet" href="C:\Users\hp\Videos\Online Qiiz Maker\.css">
+
+</head>
+<body>
+
+<div class="bg-wrap">
+    <div class="curve-left"></div>
+    <div class="curve-right"></div>
+</div>
+
+<!-- WELCOME PAGE -->
+<div class="welcome-box" id="welcome">
+    <h1>Welcome to the Quiz</h1>
+    <p>Test your knowledge with fun questions!</p>
+    <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="quiz-card" id="quiz">
+    <h3 id="questionText">Loading...</h3>
+
+    <div class="option" onclick="choose(0)" id="o0"><div class="circle">A</div><span></span></div>
+    <div class="option" onclick="choose(1)" id="o1"><div class="circle">B</div><span></span></div>
+    <div class="option" onclick="choose(2)" id="o2"><div class="circle">C</div><span></span></div>
+    <div class="option" onclick="choose(3)" id="o3"><div class="circle">D</div><span></span></div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="result-box" id="result">
+    <h2>Your Score</h2>
+    <h1 id="scoreText"></h1>
+    <button class="start-btn" onclick="showFeedback()">Give Feedback</button>
+</div>
+
+<!-- FEEDBACK PAGE -->
+<div class="feedback-box" id="feedback">
+    <h2>Feedback</h2>
+    <textarea id="feedbackInput" placeholder="Write your feedback..."></textarea>
+    <button class="submit-btn" onclick="submitFeedback()">Submit</button>
+</div>
+
+<script>
+/* ---------------------------  
+        QUIZ QUESTIONS  
+----------------------------*/
+const questions = [
+    { q: "What does CPU stand for?", opt: ["Central Processing Unit", "Computer Program Utility", "Control Power Unit", "Central Print Unit"], ans: 0 },
+    { q: "Which language is known as the mother of all languages?", opt: ["C", "Python", "Java", "Assembly"], ans: 0 },
+    { q: "What is the brain of the computer?", opt: ["RAM", "CPU", "ROM", "GPU"], ans: 1 },
+    { q: "Which of these is an operating system?", opt: ["HTML", "Linux", "SQL", "VS Code"], ans: 1 },
+    { q: "Binary system uses base?", opt: ["4", "2", "10", "8"], ans: 1 },
+    { q: "Which memory is temporary?", opt: ["ROM", "Flash", "RAM", "Hard Disk"], ans: 2 },
+    { q: "Which protocol is used for the web?", opt: ["FTP", "SMTP", "HTTP", "SSH"], ans: 2 },
+    { q: "Python was created by?", opt: ["Guido van Rossum", "James Gosling", "Dennis Ritchie", "Tim Berners-Lee"], ans: 0 },
+    { q: "Which is used for styling web pages?", opt: ["HTML", "JavaScript", "Python", "CSS"], ans: 3 },
+    { q: "Which device displays output?", opt: ["Keyboard", "Mouse", "Monitor", "Scanner"], ans: 2 }
+];
+
+let index = 0;
+let score = 0;
+
+/* ---------------------------
+          START QUIZ
+----------------------------*/
+function startQuiz(){
+    index = 0;
+    score = 0;
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("result").style.display = "none";
+    document.getElementById("feedback").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+    loadQuestion();
+}
+
+/* ---------------------------
+       LOAD QUESTION
+----------------------------*/
+function loadQuestion() {
+    const q = questions[index];
+    document.getElementById("questionText").innerText = q.q;
+
+    for (let i = 0; i < 4; i++) {
+        const opt = document.getElementById("o" + i).querySelector("span");
+        opt.innerText = q.opt[i];
+        document.getElementById("o" + i).style.pointerEvents = "auto";
+        document.getElementById("o" + i).style.background = "#f4efe9";
+        document.getElementById("o" + i).style.color = "#4a381d";
+    }
+}
+
+/* ---------------------------
+            ANSWER
+----------------------------*/
+function choose(selected){
+    const correct = questions[index].ans;
+
+    for (let i = 0; i < 4; i++)
+        document.getElementById("o" + i).style.pointerEvents = "none";
+
+    if(selected === correct){
+        score++;
+        document.getElementById("o" + selected).style.background = "#4caf50";
+        document.getElementById("o" + selected).style.color = "white";
+    } else {
+        document.getElementById("o" + selected).style.background = "#e53935";
+        document.getElementById("o" + selected).style.color = "white";
+        document.getElementById("o" + correct).style.background = "#4caf50";
+        document.getElementById("o" + correct).style.color = "white";
+    }
+
+    setTimeout(()=>{
+        index++;
+        if(index < questions.length){
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    },1200);
+}
+
+/* ---------------------------
+         SHOW RESULT
+----------------------------*/
+function showResult(){
+    document.getElementById("quiz").style.display = "none";
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("scoreText").innerText = `${score} / ${questions.length}`;
+}
+
+/* ---------------------------
+       FEEDBACK SECTION
+----------------------------*/
+function showFeedback(){
+    document.getElementById("result").style.display = "none";
+    document.getElementById("feedback").style.display = "block";
+}
+
+function submitFeedback(){
+    let fb = document.getElementById("feedbackInput").value;
+
+    if(fb.trim() === ""){
+        alert("Please write something!");
+        return;
+    }
+
+    alert("Thank you for your feedback!");
+    location.reload();
+}
+</script>
+
+</body>
+</html>
